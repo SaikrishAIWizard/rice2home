@@ -10,18 +10,11 @@ from src.config.settings import OWNER_CONTACT, OWNER_NAME
 
 def show_order_form():
 
-    st.subheader("Customer Details")
+    st.title("🛒 Rice Bag Order")
 
-    name = st.text_input("Customer Name")
-    phone = st.text_input("Phone Number")
-    location = st.text_area("Address / Landmark")
-
-    # -------------------------------
-    # SESSION STATE INITIALIZATION
-    # -------------------------------
-
-    if "show_map" not in st.session_state:
-        st.session_state.show_map = False
+    # ---------------------------
+    # SESSION STATE
+    # ---------------------------
 
     if "lat" not in st.session_state:
         st.session_state.lat = None
@@ -30,125 +23,161 @@ def show_order_form():
         st.session_state.lon = None
 
     if "gps_location" not in st.session_state:
-        st.session_state.gps_location = ""
+        st.session_state.gps_location = None
 
-    st.subheader("📍 Delivery Location")
+    if "gps_requested" not in st.session_state:
+        st.session_state.gps_requested = False
 
-    # -------------------------------
-    # GET CURRENT GPS LOCATION
-    # -------------------------------
+    # ---------------------------
+    # CUSTOMER FORM
+    # ---------------------------
 
-    if st.button("Get My Current Location 📍"):
+    with st.form("order_form"):
 
-        loc = get_geolocation()
+        st.subheader("Customer Details")
 
-        if loc is not None:
+        name = st.text_input("Customer Name")
+        phone = st.text_input("Phone Number")
+        address = st.text_area("Address / Landmark")
 
-            st.session_state.lat = loc["coords"]["latitude"]
-            st.session_state.lon = loc["coords"]["longitude"]
-            st.session_state.show_map = True
+        # ---------------------------
+        # LOCATION
+        # ---------------------------
 
-            st.success("GPS location detected successfully")
+        st.subheader("📍 Delivery Location")
 
-        else:
+        get_location = st.form_submit_button("Get My Current Location 📍")
 
-            st.warning("⚠ Could not detect GPS automatically")
+        if get_location:
+            st.session_state.gps_requested = True
 
-            # fallback location (India center)
-            st.session_state.lat = 20.5937
-            st.session_state.lon = 78.9629
-            st.session_state.show_map = True
+        # ---------------------------
+        # GPS DETECTION
+        # ---------------------------
 
-            st.info("Please select your location manually on the map")
+        if st.session_state.gps_requested:
 
-    # -------------------------------
-    # SHOW MAP
-    # -------------------------------
+            loc = get_geolocation()
 
-    if st.session_state.show_map:
+            if loc:
 
-        lat = st.session_state.lat
-        lon = st.session_state.lon
+                st.session_state.lat = loc["coords"]["latitude"]
+                st.session_state.lon = loc["coords"]["longitude"]
 
-        st.info("Click on the map to confirm your exact delivery location")
+                # auto save GPS
+                st.session_state.gps_location = f"{st.session_state.lat},{st.session_state.lon}"
 
-        m = folium.Map(
-            location=[lat, lon],
-            zoom_start=18,
-            control_scale=True
-        )
+                st.success("GPS location detected")
 
-        # Marker for detected GPS location
-        folium.Marker(
-            [lat, lon],
-            tooltip="Detected GPS Location",
-            icon=folium.Icon(color="green", icon="home")
-        ).add_to(m)
+            else:
+                st.info("Waiting for browser location permission...")
 
-        map_data = st_folium(m, height=450, width=700)
+        # ---------------------------
+        # SHOW MAP
+        # ---------------------------
 
-        # -------------------------------
-        # USER CLICK LOCATION
-        # -------------------------------
+        if st.session_state.lat and st.session_state.lon:
 
-        if map_data and map_data.get("last_clicked"):
+            lat = st.session_state.lat
+            lon = st.session_state.lon
 
-            clicked_lat = map_data["last_clicked"]["lat"]
-            clicked_lon = map_data["last_clicked"]["lng"]
+            st.info("Click map to adjust delivery location")
 
-            st.session_state.gps_location = f"{clicked_lat},{clicked_lon}"
-
-            st.success(f"Selected Location: {clicked_lat}, {clicked_lon}")
-
-            google_map_link = f"https://www.google.com/maps?q={clicked_lat},{clicked_lon}"
-
-            st.markdown(f"📍 **Google Maps:** [Open Location]({google_map_link})")
-
-    # -------------------------------
-    # RICE COMPANY SELECTION
-    # -------------------------------
-
-    st.subheader("Rice Selection")
-
-    company_options = ["Other (Enter Manually)"] + rice_companies
-
-    company = st.selectbox(
-        "Select Rice Company",
-        company_options
-    )
-
-    if company == "Other (Enter Manually)":
-        company = st.text_input("Enter Rice Bag Company Name")
-
-    # -------------------------------
-    # SUBMIT ORDER
-    # -------------------------------
-
-    if st.button("Submit Order"):
-
-        if name and phone and location and company:
-
-            full_location = f"{location} | GPS: {st.session_state.gps_location}"
-
-            order_id = process_order(
-                name,
-                phone,
-                full_location,
-                company
+            m = folium.Map(
+                location=[lat, lon],
+                zoom_start=18
             )
 
-            st.success("✅ Order Submitted Successfully")
+            # marker
+            folium.Marker(
+                [lat, lon],
+                tooltip="Current Location",
+                icon=folium.Icon(color="red", icon="home")
+            ).add_to(m)
 
-            st.info(f"""
+            map_data = st_folium(
+                m,
+                height=400,
+                width=700
+            )
+
+            if map_data and map_data.get("last_clicked"):
+
+                clicked_lat = map_data["last_clicked"]["lat"]
+                clicked_lon = map_data["last_clicked"]["lng"]
+
+                st.session_state.gps_location = f"{clicked_lat},{clicked_lon}"
+
+        # ---------------------------
+        # SHOW SELECTED LOCATION
+        # ---------------------------
+
+        if st.session_state.gps_location:
+
+            lat, lon = st.session_state.gps_location.split(",")
+
+            st.success(f"📍 Selected Location: {lat}, {lon}")
+
+            google_link = f"https://www.google.com/maps?q={lat},{lon}"
+
+            st.markdown(f"[Open in Google Maps]({google_link})")
+
+        # ---------------------------
+        # RICE COMPANY
+        # ---------------------------
+
+        st.subheader("Rice Selection")
+
+        company_options = ["Other (Enter Manually)"] + rice_companies
+
+        # selected_company = st.selectbox(
+        #     "Select Rice Company",
+        #     company_options
+        # )
+
+        #if selected_company == "Other (Enter Manually)":
+        company = st.text_input("Enter Rice Company Name")
+        #else:
+        #    company = selected_company
+
+        # ---------------------------
+        # SUBMIT ORDER
+        # ---------------------------
+
+        submit_order = st.form_submit_button("Submit Order")
+
+    # ---------------------------
+    # PROCESS ORDER
+    # ---------------------------
+
+    if submit_order:
+
+        if not st.session_state.gps_location:
+            st.error("Please select delivery location")
+            return
+
+        if not name.strip() or not phone.strip() or not address.strip() or not company.strip():
+            st.error("Please fill all details")
+            return
+
+        full_location = f"{address} | GPS:{st.session_state.gps_location}"
+
+        order_id = process_order(
+            name,
+            phone,
+            full_location,
+            company,
+            google_link
+        )
+
+        st.success("✅ Order Submitted Successfully")
+
+        st.info(f"""
 Reference Order Number: **{order_id}**
 
 Our team will contact you shortly.
 
-Contact Details  
+Contact  
 {OWNER_NAME}  
 📞 {OWNER_CONTACT}
 """)
-
-        else:
-
-            st.error("Please fill all required details")

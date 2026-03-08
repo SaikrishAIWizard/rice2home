@@ -33,7 +33,7 @@ Delivery Location
 {order_details['location']}
 
 Google Maps:
-https://www.google.com/maps?q={order_details['location']}
+{order_details['google_link']}
 
 --------------------------------
 This order was generated from Rice Order App

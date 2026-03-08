@@ -2,7 +2,7 @@ from src.utils.helpers import generate_order_id
 from src.services.email_service import send_order_email
 
 
-def process_order(name, phone, location, company):
+def process_order(name, phone, location, company, google_link):
 
     order_id = generate_order_id()
 
@@ -11,7 +11,8 @@ def process_order(name, phone, location, company):
         "name": name,
         "phone": phone,
         "location": location,
-        "company": company
+        "company": company,
+        "google_link": google_link
     }
 
     send_order_email(order_details)

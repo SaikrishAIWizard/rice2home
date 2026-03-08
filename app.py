@@ -111,6 +111,10 @@ input::placeholder, textarea::placeholder{
     box-shadow:0 10px 20px rgba(0,0,0,0.3);
     background: linear-gradient(90deg,#36d1dc,#5b86e5);
 }
+            
+div[data-testid="stMarkdownContainer"] h3 {
+        color: white;
+    }
 
 </style>
 """, unsafe_allow_html=True)
