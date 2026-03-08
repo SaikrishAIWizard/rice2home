@@ -1,0 +1,5 @@
+streamlit
+python-dotenv
+streamlit-js-eval
+streamlit-folium
+folium
