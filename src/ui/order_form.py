@@ -1,10 +1,10 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-from streamlit_js_eval import get_geolocation
 
 from src.services.order_service import process_order
 from src.config.settings import OWNER_CONTACT, OWNER_NAME
+from src.utils.location_service import fetch_user_location
 
 
 def show_order_form():
@@ -37,19 +37,19 @@ def show_order_form():
         st.session_state.get_location_trigger = True
 
     # ---------------------------
-    # GET GEOLOCATION
+    # GET LOCATION FROM SERVICE
     # ---------------------------
 
     if st.session_state.get_location_trigger:
 
-        loc = get_geolocation()
+        lat, lon = fetch_user_location()
 
-        if loc:
+        if lat and lon:
 
-            st.session_state.lat = loc["coords"]["latitude"]
-            st.session_state.lon = loc["coords"]["longitude"]
+            st.session_state.lat = lat
+            st.session_state.lon = lon
 
-            st.session_state.gps_location = f"{st.session_state.lat},{st.session_state.lon}"
+            st.session_state.gps_location = f"{lat},{lon}"
 
             st.success("GPS location detected")
 
