@@ -132,7 +132,7 @@ st.image("assets/logo.png", width=120)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- TITLE ----------
-st.markdown('<div class="title">Rice2Home Service</div>', unsafe_allow_html=True)
+st.markdown('<div class="title">Rice2Home</div>', unsafe_allow_html=True)
 
 st.markdown(
     '<div class="subtitle">Order premium quality rice bags directly from us</div>',
