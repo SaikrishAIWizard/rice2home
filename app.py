@@ -140,7 +140,7 @@ st.markdown(
 )
 
 # ---------- FORM CARD ----------
-st.markdown('<div class="card">', unsafe_allow_html=True)
+#st.markdown('<div class="card">', unsafe_allow_html=True)
 
 show_order_form()
 
