@@ -124,7 +124,7 @@ div[data-testid="stMarkdownContainer"] h3 {
 </style>
 """, unsafe_allow_html=True)
 # ---------- MAIN CONTAINER ----------
-st.markdown('<div class="main-container">', unsafe_allow_html=True)
+#st.markdown('<div class="main-container">', unsafe_allow_html=True)
 
 # ---------- LOGO ----------
 st.markdown('<div class="logo">', unsafe_allow_html=True)

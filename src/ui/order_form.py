@@ -9,7 +9,7 @@ from src.utils.location_service import fetch_user_location
 
 def show_order_form():
 
-    st.title("🛒 Rice Bags ")
+    #st.title("🛒 Rice Bags ")
 
     # ---------------------------
     # SESSION STATE
