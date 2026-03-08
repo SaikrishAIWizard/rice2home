@@ -115,6 +115,11 @@ input::placeholder, textarea::placeholder{
 div[data-testid="stMarkdownContainer"] h3 {
         color: white;
     }
+            
+ div[data-testid="stMarkdownContainer"] h1 {
+        color: white;
+        font-weight: 700;
+    }
 
 </style>
 """, unsafe_allow_html=True)
@@ -127,7 +132,7 @@ st.image("assets/logo.png", width=120)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- TITLE ----------
-st.markdown('<div class="title">Rice Bag Order Service</div>', unsafe_allow_html=True)
+st.markdown('<div class="title">Rice2Home Service</div>', unsafe_allow_html=True)
 
 st.markdown(
     '<div class="subtitle">Order premium quality rice bags directly from us</div>',
