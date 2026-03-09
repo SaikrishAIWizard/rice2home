@@ -19,7 +19,7 @@ load_css()
 col1, col2 = st.columns([1,2])
 
 with col1:
-    st.image("assets/logo3.png", width=320)
+    st.image("assets/logo3.png", width=160)
 
 with col2:
     st.markdown(f"""
