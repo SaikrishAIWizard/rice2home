@@ -56,7 +56,7 @@ def show_order_form():
 
         else:
 
-            st.info("Turn on the GPS to get your location...")
+            st.info("Turn on the GPS and double click on the 📍...")
 
     # ---------------------------
     # SHOW MAP
