@@ -85,8 +85,8 @@ input, textarea {
 
 .whatsapp-float {
     position: fixed;
-    bottom: 25px;
-    right: 25px;
+    bottom: 50px;
+    right: 50px;
     background: #25D366;
     color: white;
     border-radius: 50px;
