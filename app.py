@@ -128,7 +128,7 @@ div[data-testid="stMarkdownContainer"] h3 {
 
 # ---------- LOGO ----------
 st.markdown('<div class="logo">', unsafe_allow_html=True)
-st.image("assets/logo.jpeg", width=120)
+st.image("assets/logo1.png", width=120)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # ---------- TITLE ----------
