@@ -7,6 +7,22 @@ from src.config.settings import OWNER_CONTACT, OWNER_NAME
 from src.utils.location_service import fetch_user_location
 from src.data.rice_companies import rice_companies
 
+import base64
+
+def show_gif(gif_path, width=200):
+    with open(gif_path, "rb") as f:
+        data = f.read()
+
+    encoded = base64.b64encode(data).decode()
+
+    st.markdown(
+        f"""
+        <div style="text-align:center;">
+            <img src="data:image/gif;base64,{encoded}" width="{width}">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 def show_order_form():
 
@@ -56,7 +72,7 @@ def show_order_form():
 
         else:
 
-            st.info("Turn on the GPS and double click on the 📍...")
+            st.info("Turn on the GPS and refresh the page...")
 
     # ---------------------------
     # SHOW MAP
@@ -132,6 +148,10 @@ def show_order_form():
     # PROCESS ORDER
     # ---------------------------
 
+    # ---------------------------
+    # PROCESS ORDER
+    # ---------------------------
+
     if submit_order:
 
         if not st.session_state.gps_location:
@@ -152,14 +172,36 @@ def show_order_form():
             google_link
         )
 
-        st.success("✅ Order Submitted Successfully")
+        # 🎉 Celebration animation
+        st.balloons()
 
-        st.info(f"""
-Reference Order Number: **{order_id}**
+        col1, col2 = st.columns([1,2])
 
-Our team will contact you shortly.
+        with col1:
+            show_gif("assets/happy_delivery.gif", 200)
 
-Contact  
-{OWNER_NAME}  
-📞 {OWNER_CONTACT}
-""")
+        with col2:
+
+            st.success("✅ Order Submitted Successfully!")
+
+            st.markdown(f"""
+    ### 📦 Order Details
+
+    **Order ID:** {order_id}  
+    **Customer:** {name}  
+    **Phone:** {phone}  
+    **Rice Brand:** {company}
+
+    📍 **Delivery Location**  
+    {address}
+
+    [Open in Google Maps]({google_link})
+
+    ---
+
+    🚚 Our team will contact you shortly.
+
+    **Contact**  
+    {OWNER_NAME}  
+    📞 {OWNER_CONTACT}
+    """)
