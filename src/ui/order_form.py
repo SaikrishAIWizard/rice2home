@@ -72,7 +72,24 @@ def show_order_form():
 
         else:
 
-            st.info("Turn on the GPS and refresh the page...")
+            #st.info("Turn on the location and refresh the page...")
+            st.markdown(
+                    """
+                    <div style="
+                        background: rgba(255,255,255,0.08);
+                        padding:12px 16px;
+                        border-radius:10px;
+                        border-left:4px solid #00c6ff;
+                        color:white;
+                        font-size:15px;
+                        margin-top:10px;
+                    ">
+                        📍 Turn on the location and refresh the page...
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+            
 
     # ---------------------------
     # SHOW MAP
@@ -155,14 +172,20 @@ def show_order_form():
     if submit_order:
 
         if not st.session_state.gps_location:
-            st.error("Please select delivery location")
-            return
+            #st.error("Please select delivery location")
+            lat, lon = 0,0
+
+            #st.success(f"📍 Selected Location: {lat}, {lon}")
+
+            google_link = f"NA"
 
         if not name.strip() or not phone.strip() or not address.strip() or not company.strip():
             st.error("Please fill all details")
             return
-
-        full_location = f"{address} | GPS:{st.session_state.gps_location}"
+        try:
+            full_location = f"{address} | GPS:{st.session_state.gps_location}"
+        except:
+            full_location = f"{address} | GPS:NA"
 
         order_id = process_order(
             name,
