@@ -20,7 +20,7 @@ col1, col2 = st.columns([1,2])
 
 with col1:
     # Read SVG file content
-    with open("logo.svg") as f:
+    with open("assets/logo.svg") as f:
         svg_code = f.read()
 
     #st.image("assets/logo3.png", width=160)
