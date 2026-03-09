@@ -56,7 +56,7 @@ def show_order_form():
 
         else:
 
-            st.info("Waiting for browser location permission...")
+            st.info("Turn on the GPS to get your location...")
 
     # ---------------------------
     # SHOW MAP
