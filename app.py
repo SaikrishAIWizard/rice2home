@@ -2,6 +2,24 @@ import streamlit as st
 from src.ui.order_form import show_order_form
 from src.config.settings import OWNER_CONTACT, OWNER_NAME
 
+import base64
+
+def show_gif(gif_path, width=200):
+    with open(gif_path, "rb") as f:
+        data = f.read()
+
+    encoded = base64.b64encode(data).decode()
+
+    st.markdown(
+        f"""
+        <div style="text-align:center;">
+            <img src="data:image/gif;base64,{encoded}" width="{width}">
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
 st.set_page_config(
     page_title="Rice2Home",
     page_icon="🌾",
@@ -20,11 +38,12 @@ col1, col2 = st.columns([1,2])
 
 with col1:
     # Read SVG file content
-    with open("assets/logo.svg") as f:
-        svg_code = f.read()
+    # with open("assets/logo.svg") as f:
+    #     svg_code = f.read()
 
-    #st.image("assets/logo3.png", width=160)
-    st.image(svg_code, width=320)
+    # #st.image("assets/logo3.png", width=160)
+    # st.image(svg_code, width=320)
+    show_gif("assets/logo.gif", 200)
 
 with col2:
     st.markdown(f"""

@@ -131,7 +131,7 @@ def show_order_form():
 
         st.subheader("Customer Details")
 
-        name = st.text_input("Customer Name")
+        name = st.text_input("Name")
         phone = st.text_input("Phone Number")
         address = st.text_area("Address / Landmark")
 
