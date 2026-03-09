@@ -4,5 +4,6 @@ rice_companies = [
     "Kohinoor",
     "Sri Lalitha",
     "Sona Masoori Premium",
-    "Local Mill Rice"
+    "Local Mill Rice",
+    "Others - will contact you for details"
 ]

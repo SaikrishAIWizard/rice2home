@@ -5,6 +5,7 @@ from streamlit_folium import st_folium
 from src.services.order_service import process_order
 from src.config.settings import OWNER_CONTACT, OWNER_NAME
 from src.utils.location_service import fetch_user_location
+from src.data.rice_companies import rice_companies
 
 
 def show_order_form():
@@ -118,9 +119,12 @@ def show_order_form():
         phone = st.text_input("Phone Number")
         address = st.text_area("Address / Landmark")
 
-        st.subheader("Rice Selection")
+        # st.subheader("Rice Selection")
 
-        company = st.text_input("Enter Rice Company Name")
+        # company = st.text_input("Enter Rice Company Name")
+        st.subheader("Rice Selection")
+        company = st.selectbox(
+                 "Select Rice Company", rice_companies)
 
         submit_order = st.form_submit_button("Submit Order")
 

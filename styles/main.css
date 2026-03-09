@@ -1,0 +1,114 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Background */
+.stApp{
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+}
+
+/* Title */
+.main-title{
+    font-size:42px;
+    font-weight:600;
+    color:white;
+}
+
+/* Subtitle */
+.subtitle{
+    font-size:16px;
+    color:#e6e6e6;
+}
+
+/* HEADERS FIX (st.title, st.subheader, st.header) */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+}
+
+/* Also fix Streamlit markdown containers */
+div[data-testid="stMarkdownContainer"] h1,
+div[data-testid="stMarkdownContainer"] h2,
+div[data-testid="stMarkdownContainer"] h3 {
+    color: white !important;
+}
+
+/* Labels */
+label{
+    color:white !important;
+}
+
+/* Contact Card */
+.contact-card{
+    background:rgba(239, 234, 234, 0.1);
+    padding:15px 20px;
+    border-radius:12px;
+    color:white;
+    backdrop-filter: blur(10px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* Form Card */
+.form-card{
+    background:rgba(246, 243, 243, 0.08);
+    padding:35px;
+    border-radius:16px;
+    backdrop-filter: blur(14px);
+    border:1px solid rgba(244, 239, 239, 0.15);
+}
+
+/* Inputs */
+input, textarea {
+    color:white !important;
+}
+
+/* Button */
+.stButton>button{
+    width:100%;
+    height:48px;
+    border-radius:10px;
+    border:none;
+    font-size:16px;
+    font-weight:600;
+    color:white;
+    background: linear-gradient(90deg,#00c6ff,#0072ff);
+}
+
+.stButton>button:hover{
+    transform: translateY(-2px);
+    box-shadow:0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* Floating WhatsApp Button */
+
+.whatsapp-float {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #25D366;
+    color: white;
+    border-radius: 50px;
+    padding: 12px 18px;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow:0 10px 25px rgba(0,0,0,0.3);
+    text-decoration: none;
+    z-index: 999;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* WhatsApp icon */
+.whatsapp-float img{
+    width:20px;
+    height:20px;
+}
+
+.whatsapp-float:hover{
+    background:#1ebe5d;
+    transform:scale(1.05);
+}
