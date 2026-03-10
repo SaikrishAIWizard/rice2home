@@ -228,3 +228,5 @@ def show_order_form():
     {OWNER_NAME}  
     📞 {OWNER_CONTACT}
     """)
+    else:
+        show_gif("assets/waiting.gif", 200)
