@@ -56,7 +56,7 @@ with col2:
 
 # ---------- TITLE ----------
 st.markdown(
-    '<div class="main-title">Rice2Home</div>',
+    '<div class="main-title">Rice2Home ELURU</div>',
     unsafe_allow_html=True
 )
 

@@ -207,26 +207,27 @@ def show_order_form():
 
             st.success("✅ Order Submitted Successfully!")
 
-            st.markdown(f"""
-    ### 📦 Order Details
+            st.markdown(
+                            f"""
+                ### 📦 Order Details
 
-    **Order ID:** {order_id}  
-    **Customer:** {name}  
-    **Phone:** {phone}  
-    **Rice Brand:** {company}
+                **Order ID:** {order_id}  
+                **Customer:** {name}  
+                **Phone:** {phone}  
+                **Rice Brand:** {company}
 
-    📍 **Delivery Location**  
-    {address}
+                📍 **Delivery Location**  
+                {address}
 
-    [Open in Google Maps]({google_link})
+                [Open in Google Maps]({google_link})
 
-    ---
+                ---
 
-    🚚 Our team will contact you shortly.
+                🚚 Our team will contact you shortly.
 
-    **Contact**  
-    {OWNER_NAME}  
-    📞 {OWNER_CONTACT}
-    """)
+                **Contact**  
+                {OWNER_NAME}  
+                📞 {OWNER_CONTACT}
+                """)
     else:
         show_gif("assets/waiting.gif", 200)
