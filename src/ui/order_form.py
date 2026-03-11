@@ -1,6 +1,7 @@
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
+import time
 
 from src.services.order_service import process_order
 from src.config.settings import OWNER_CONTACT, OWNER_NAME
@@ -8,6 +9,7 @@ from src.utils.location_service import fetch_user_location
 from src.data.rice_companies import rice_companies
 
 import base64
+
 
 def show_gif(gif_path, width=200):
     with open(gif_path, "rb") as f:
@@ -24,9 +26,8 @@ def show_gif(gif_path, width=200):
         unsafe_allow_html=True
     )
 
-def show_order_form():
 
-    #st.title("🛒 Rice Bags ")
+def show_order_form():
 
     # ---------------------------
     # SESSION STATE
@@ -44,6 +45,16 @@ def show_order_form():
     if "get_location_trigger" not in st.session_state:
         st.session_state.get_location_trigger = False
 
+    # NEW
+    if "order_submitted" not in st.session_state:
+        st.session_state.order_submitted = False
+
+    if "gif_stage" not in st.session_state:
+        st.session_state.gif_stage = "waiting"
+
+    if "order_data" not in st.session_state:
+        st.session_state.order_data = None
+
     # ---------------------------
     # GPS BUTTON
     # ---------------------------
@@ -59,37 +70,42 @@ def show_order_form():
 
     if st.session_state.get_location_trigger:
 
-        lat, lon = fetch_user_location()
+        lat, lon, availability = fetch_user_location()
 
         if lat and lon:
 
             st.session_state.lat = lat
             st.session_state.lon = lon
-
             st.session_state.gps_location = f"{lat},{lon}"
 
             st.success("GPS location detected")
 
+            if availability:
+                st.success(f"✅ Delivery available in your area Eluru")
+
+            else:
+                st.error(f"🚫 Sorry, we are currently serving only in Eluru")
+                show_gif("assets/service.gif", 200)
+                st.stop()
+
         else:
 
-            #st.info("Turn on the location and refresh the page...")
             st.markdown(
-                    """
-                    <div style="
-                        background: rgba(255,255,255,0.08);
-                        padding:12px 16px;
-                        border-radius:10px;
-                        border-left:4px solid #00c6ff;
-                        color:white;
-                        font-size:15px;
-                        margin-top:10px;
-                    ">
-                        📍 Turn on the location and refresh the page...
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-            
+                """
+                <div style="
+                    background: rgba(255,255,255,0.08);
+                    padding:12px 16px;
+                    border-radius:10px;
+                    border-left:4px solid #00c6ff;
+                    color:white;
+                    font-size:15px;
+                    margin-top:10px;
+                ">
+                    📍 Turn on the location and refresh the page...
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
     # ---------------------------
     # SHOW MAP
@@ -99,8 +115,6 @@ def show_order_form():
 
         lat = st.session_state.lat
         lon = st.session_state.lon
-
-        st.info("Click map to adjust delivery location")
 
         m = folium.Map(
             location=[lat, lon],
@@ -152,18 +166,10 @@ def show_order_form():
         phone = st.text_input("Phone Number")
         address = st.text_area("Address / Landmark")
 
-        # st.subheader("Rice Selection")
-
-        # company = st.text_input("Enter Rice Company Name")
         st.subheader("Rice Selection")
-        company = st.selectbox(
-                 "Select Rice Company", rice_companies)
+        company = st.selectbox("Select Rice Company", rice_companies)
 
         submit_order = st.form_submit_button("Submit Order")
-
-    # ---------------------------
-    # PROCESS ORDER
-    # ---------------------------
 
     # ---------------------------
     # PROCESS ORDER
@@ -172,20 +178,20 @@ def show_order_form():
     if submit_order:
 
         if not st.session_state.gps_location:
-            #st.error("Please select delivery location")
-            lat, lon = 0,0
-
-            #st.success(f"📍 Selected Location: {lat}, {lon}")
-
-            google_link = f"NA"
+            google_link = "NA"
 
         if not name.strip() or not phone.strip() or not address.strip() or not company.strip():
             st.error("Please fill all details")
-            return
+            show_gif("assets/waiting.gif", 200)
+            st.stop()
+
         try:
             full_location = f"{address} | GPS:{st.session_state.gps_location}"
+            lat, lon = st.session_state.gps_location.split(",")
+            google_link = f"https://www.google.com/maps?q={lat},{lon}"
         except:
             full_location = f"{address} | GPS:NA"
+            google_link = "NA"
 
         order_id = process_order(
             name,
@@ -195,39 +201,77 @@ def show_order_form():
             google_link
         )
 
-        # 🎉 Celebration animation
-        st.balloons()
+        # SAVE ORDER DATA
+        st.session_state.order_data = {
+            "order_id": order_id,
+            "name": name,
+            "phone": phone,
+            "company": company,
+            "address": address,
+            "google_link": google_link
+        }
 
-        col1, col2 = st.columns([1,2])
+        st.session_state.order_submitted = True
+        st.session_state.gif_stage = "waiting"
+
+    # ---------------------------
+    # SHOW SUCCESS SCREEN
+    # ---------------------------
+
+    if st.session_state.order_submitted:
+
+        data = st.session_state.order_data
+
+        #st.balloons()
+
+        col1, col2 = st.columns([1, 2])
 
         with col1:
-            show_gif("assets/happy_delivery.gif", 200)
+
+            gif_placeholder = st.empty()
+
+            if st.session_state.gif_stage == "waiting":
+                st.balloons()
+                with gif_placeholder:
+                    show_gif("assets/orderconfirmed.gif", 200)
+
+                time.sleep(10)
+
+                st.session_state.gif_stage = "done"
+                st.rerun()
+
+            elif st.session_state.gif_stage == "done":
+
+                with gif_placeholder:
+                    show_gif("assets/happy_delivery.gif", 200)
 
         with col2:
 
             st.success("✅ Order Submitted Successfully!")
 
             st.markdown(
-                            f"""
-                ### 📦 Order Details
+                                    f"""
+                    ### 📦 Order Details
 
-                **Order ID:** {order_id}  
-                **Customer:** {name}  
-                **Phone:** {phone}  
-                **Rice Brand:** {company}
+                    **Order ID:** {data['order_id']}  
+                    **Customer:** {data['name']}  
+                    **Phone:** {data['phone']}  
+                    **Rice Brand:** {data['company']}
 
-                📍 **Delivery Location**  
-                {address}
+                    📍 **Delivery Location**  
+                    {data['address']}
 
-                [Open in Google Maps]({google_link})
+                    [Open in Google Maps]({data['google_link']})
 
-                ---
+                    ---
 
-                🚚 Our team will contact you shortly.
+                    🚚 Our team will contact you shortly.
 
-                **Contact**  
-                {OWNER_NAME}  
-                📞 {OWNER_CONTACT}
-                """)
+                    **Contact**  
+                    {OWNER_NAME}  
+                    📞 {OWNER_CONTACT}
+                    """
+                                )
+
     else:
-        show_gif("assets/waiting.gif", 200)
+        show_gif("assets/checkalldetails.gif", 200)
