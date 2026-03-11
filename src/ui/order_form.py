@@ -235,7 +235,7 @@ def show_order_form():
                 with gif_placeholder:
                     show_gif("assets/orderconfirmed.gif", 200)
 
-                time.sleep(10)
+                time.sleep(12)
 
                 st.session_state.gif_stage = "done"
                 st.rerun()
